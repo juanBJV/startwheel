@@ -1,0 +1,29 @@
+{
+  "name": "startwheel",
+  "version": "1.0.0",
+  "description": "Startwheel landing page",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "browser-sync": "^2.7.10",
+    "browserify": "^10.2.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.7.10",
+    "browserify": "^10.2.4",
+    "gulp": "^3.9.0",
+    "gulp-sass": "^2.0.1",
+    "gulp-util": "^3.0.5",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.2"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "startwheel",
+    "landing-page",
+    "gulp"
+  ],
+  "author": "juanvallejo",
+  "license": "ISC"
+}

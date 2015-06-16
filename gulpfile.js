@@ -20,7 +20,7 @@ var watchify    = require('watchify');
 /**
  * Build production assets and serve local dev server
  */
-gulp.task('default', ['html', 'css'], function() {
+gulp.task('default', ['watch-static-files'], function() {
 
     // configure browsersync
     browserSync({
@@ -53,36 +53,33 @@ gulp.task('default', ['html', 'css'], function() {
 
 });
 
-gulp.task('css', function() {
-
-    gulp
-        .watch('./css/main.css')
-        .on('change', function() {
-            
-            console.log('static> Exporting static css assets...');
-
-            gulp
-                .src('./css/main.css')
-                .pipe(sass())
-                .pipe(gulp.dest('./dist'));
-
-            reload();
-
-        });
-
-});
-
 /**
  * Run parser tasks on static assets, build into production file
  * and watch for changes
  */
-gulp.task('html', function() {
+gulp.task('watch-static-files', function() {
 
     gulp
-        .watch('index.html')
-        .on('change', function() {
+        .watch([
+            './index.html',
+            './css/main.scss'
+        ])
+        .on('change', function(file) {
 
-            console.log('static> Exporting static html assets...');
+            if(getFileTypeFromPath(file.path) == 'css') {
+
+                console.log('static> Exporting static css assets...');
+
+                // convert css variants into css
+                gulp
+                    .src(file.path)
+                    .pipe(sass().on('error', sass.logError))
+                    .pipe(gulp.dest('./dist'));
+
+            } else {
+                console.log('static> Exporting static html assets...');
+            }
+
             reload();
 
         });
@@ -108,5 +105,26 @@ function exportBundle(bundle) {
 		.pipe(source('startwheel.js'))
 		.pipe(gulp.dest('./dist'))
         .pipe(reload({ stream: true }));
+
+}
+
+/**
+ * Receives a relative or absolute filepath and returns
+ * the file extension representing filetype. Filetypes
+ * are translated into a common file extension: for
+ * example scss -> css, jpeg -> jpg
+ */
+function getFileTypeFromPath(path) {
+
+    // define common filetype extensions
+    var defs = {
+        'sass': 'css',
+        'scss': 'css'
+    };
+
+    var ext = path.split('.');
+    ext = ext[ext.length - 1];
+
+    return defs[ext];
 
 }
